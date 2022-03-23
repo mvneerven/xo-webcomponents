@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal XO Form</title>
+    <script defer type="module" src="/dist/xo-webcomponents.js"></script>
+    <link rel="stylesheet" href="/css/main.css" />
+
+    <style>
+        xo-filedrop::part(files) {
+            overflow: hidden;
+
+        }
+
+        xo-filedrop:not(.has-files)::part(files):after {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: fit-content;
+
+
+            content: "Select files to upload, or drag & drop them here...";
+            position: absolute;
+            opacity: .3;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <xo-form theme="material" src="/forms/simple.js"></xo-form>
+</body>
+
+</html>

@@ -1,11 +1,27 @@
 import breeds from "./pet-breeds.json" assert { type: "json" };
 
 const breedAutoComplete = (options) => {
-  let bd = window.breedData;
-  let search = options.search.toLowerCase();
-  return bd.filter((i) => {
-    return i.text.toLowerCase().indexOf(search) >= 0;
+  let type = options.control?.context?.data.instance.insurance.type;
+
+  let bd = breeds[type].map((i) => {
+    return {
+      text: i.name,
+    };
   });
+  let search = options.search.toLowerCase();
+  const weightCategories = [
+    "Mix 0-9 kg",
+    "Mix 10-19 kg",
+    "Mix 20-29 kg",
+    "Mix 30-39 kg",
+    "Mix 40+ kg",
+  ];
+
+  return weightCategories
+    .map((i) => {
+      return { text: i };
+    })
+    .concat(bd);
 };
 
 export const onboarding = {
@@ -13,7 +29,9 @@ export const onboarding = {
     instance: {
       state: {},
       insurance: {
-        //type: "dog",
+        name: "",
+        type: "",
+        breed: "",
       },
     },
     rules: {
@@ -39,31 +57,9 @@ export const onboarding = {
       ],
       "#/insurance/type": [
         {
-          set: "#/state/breeds",
-          value: (context) => {
-            window.breedData = breeds[context.value].map((i) => {
-              return {
-                text: i.name,
-              };
-            });
-          },
-        },
-        {
           set: "#/state/typeImage",
           value: (context) => {
             return `/img/pets/${context.get("#/insurance/type")}.webp`;
-          },
-        },
-        {
-          set: "#/_xo/nav/page",
-          value: 2,
-        },
-        {
-          set: "#/state/breedPlaceholder",
-          value: (context) => {
-            let s = context.value;
-            s = s.charAt(0).toUpperCase() + s.slice(1);
-            return s + " breed or mix";
           },
         },
       ],
@@ -71,17 +67,22 @@ export const onboarding = {
   },
   pages: [
     {
+      label: "Calculate your price",
       fields: [
         {
-          type: "info",
-          title: "Petplan. The plan your pet can't make",
+          type: "text",
+          label: "Name of your pet",
+          placeholder: "Fikkie",
+          required: true,
+          bind: "#/insurance/name",
         },
         {
-          type: "radiogroup",
+          type: "xw-radiogroup",
           layout: "cards",
-          label: "What type of pet do you wish to insure?",
+          label: "What type of pet is #/insurance/name ?",
           required: true,
-          style: "--card-width: 110px; --card-height: 110px",
+          cardWidth: "110px",
+          cardHeight: "110px",
           bind: "#/insurance/type",
           items: [
             { label: "Cat", value: "cat", image: "/img/pets/cat.webp" },
@@ -98,27 +99,35 @@ export const onboarding = {
             },
           ],
         },
+        {
+          type: "xw-checkgroup",
+          layout: "cards",
+          label: "What type of pet is #/insurance/name ?",
+          required: true,
+          cardWidth: "140px",
+          cardHeight: "40px",
+          bind: "#/insurance/checks",
+          items: [
+            { label: "Cat", value: "cat" },
+            { label: "Dog", value: "dog" },
+            { label: "Parrot", value: "parrot" },
+            { label: "Rabbit", value: "rabbit" },
+          ],
+        },
       ],
     },
     {
       fields: [
         {
-          type: "info",
+          type: "xw-info",
           title: "Base data (#/insurance/type)",
           body: "Enter your pet's details",
-        },
-        {
-          type: "text",
-          label: "Name",
-          placeholder: "Your #/insurance/type's name",
-          required: true,
-          bind: "#/insurance/name",
         },
 
         {
           type: "search",
-          label: "Breed",
-          placeholder: "#/state/breedPlaceholder",
+          label: "Breed/Mix",
+          placeholder: "Search here...",
           bind: "#/insurance/breed",
           required: true,
           autocomplete: {
@@ -126,23 +135,34 @@ export const onboarding = {
           },
         },
         {
-          type: "radiogroup",
-          label: "Age",
-          bind: "#/insurance/ageGroup",
+          type: "text",
+          label: "Birthdate",
+          bind: "#/insurance/petBirthDate",
           required: true,
-          items: ["0-1 year", "2-5 years", "5 years+"],
+          placeholder: "DD-MM-JJJJ",
+          pattern: "[0-9]{2}-[0-9]{2}-[1-2][9,0][1-9]{2}",
+        },
+
+        {
+          type: "text",
+          required: true,
+          bind: "#/insurance/zipCode",
+          label: "Your zip code",
+          maxlength: 7,
+          pattern: "[1-9][0-9]{3}\\s?[a-zA-Z]{2}",
+          placeholder: "1234 AB",
         },
       ],
     },
     {
       fields: [
         {
-          type: "info",
+          type: "xw-info",
           title: "Insurance type",
           body: "Select a plan",
         },
         {
-          type: "radiogroup",
+          type: "xw-radiogroup",
           layout: "list",
           style: "--card-width: 100%; --card-height: 110px",
           bind: "#/insurance/plan",
@@ -157,26 +177,16 @@ export const onboarding = {
     {
       fields: [
         {
-          type: "info",
+          type: "xw-info",
           title: "Check your data",
           body: "Please verify the data below for correctness",
         },
 
         {
-          type: "info",
+          type: "xw-info",
           title: "Your request",
-         // style: "border: 1px solid #ccc; padding: 1rem",
+          // style: "border: 1px solid #ccc; padding: 1rem",
           body: "You want your #/insurance/ageGroup old #/insurance/breed #/insurance/type '#/insurance/name' to have a #/insurance/plan plan.",
-        },
-
-        {
-          type: "text",
-          required: true,
-          bind: "#/insurance/zipCode",
-          label: "Your zip code",
-          maxlength: 7,
-          pattern: "[1-9][0-9]{3}s?[a-zA-Z]{2}",
-          placeholder: "1234 AB",
         },
 
         {

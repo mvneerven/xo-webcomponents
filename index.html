@@ -6,21 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minimal XO Form</title>
-    <script defer type="module" src="/dist/xo-webcomponents.js"></script>
+    
+    <script defer type="module" src="/js/index.js"></script>
+
     <link rel="stylesheet" href="/css/main.css" />
 
-    <style>
-        xo-filedrop::part(files) {
-            overflow: hidden;
-
-        }
-
-        
-    </style>
 </head>
 
 <body>
-    <xo-form theme="material" src="/forms/simple.js"></xo-form>
+    <xw-theme></xw-theme>
+    
+    <xo-form theme="material" src="/forms/manage-pets.js"></xo-form>
 
     <textarea readonly id="model" cols="80" rows="20"></textarea>
 

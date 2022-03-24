@@ -34,14 +34,7 @@ export const managePets = {
       },
     },
     rules: {
-      // "#/state/name": [
-      //   {
-      //     set: "#/state/noname",
-      //     value: context => {
-      //       return typeof context.value === "undefined" || context.value === ""
-      //     }
-      //   }
-      // ],
+      
       "#/state/pets/*/name": [
         {
           value: (context) => {
@@ -108,8 +101,8 @@ export const managePets = {
               type: "button",
               style: "margin-top: 9px",
               label: "Add",
-              bind: "#/state/add",
-              //disabled: "#/state/noname"
+              bind: "#/state/add"
+              
             },
           ],
         },
@@ -159,10 +152,10 @@ export const managePets = {
                   ],
                 },
                 {
-                  type: "filedrop",
+                  type: "xw-filedrop",
                   label: "Photo",
                   bind: "#/state/pets/@index/image",
-                  height: "200px",
+                  height: "300px",
                   max: 1,
                   types: ["image/"],
                   limit: 1024 * 5 * 1000,

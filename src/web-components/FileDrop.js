@@ -2,7 +2,6 @@ import { LitElement } from "lit";
 import { html, css } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 
-
 const DEF_HEIGHT = "100px";
 
 class FileDrop extends LitElement {

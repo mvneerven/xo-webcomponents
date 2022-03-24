@@ -1,9 +1,19 @@
-import xo from "xo-form";
-import { html } from "lit";
 import { repeat } from "lit/directives/repeat.js";
+import { css, LitElement, html } from "lit";
 
-class CheckGroup extends xo.Control {
+class CheckGroup extends LitElement {
   _value = [];
+
+  static get styles() {
+    return [
+      css`
+        .xo-sl,
+        input {
+          cursor: pointer;
+        }
+      `,
+    ];
+  }
 
   static get properties() {
     return {
@@ -17,7 +27,7 @@ class CheckGroup extends xo.Control {
     this.items = [];
   }
 
-  renderInput() {
+  render() {
     let name = this.name;
 
     return html`<div>
@@ -60,12 +70,16 @@ class CheckGroup extends xo.Control {
       if (ix !== -1) this._value.splice(ix, 1);
     }
 
-    this.fireChange();
+    this.dispatchEvent(
+      new Event("change", { bubbles: true, cancelable: false })
+    );
   }
 
   checkValidity() {
     //TODO
   }
+
+  reportValidity() {}
 
   isSelected(item) {
     return this._value.includes(item.value);
@@ -86,4 +100,4 @@ class CheckGroup extends xo.Control {
   }
 }
 export default CheckGroup;
-window.customElements.define("xo-checkgroup", CheckGroup);
+window.customElements.define("xw-checkgroup", CheckGroup);

@@ -1,10 +1,11 @@
+import { LitElement } from "lit";
 import { html, css } from "lit";
 import { repeat } from "lit/directives/repeat.js";
-import xo from "xo-form";
+
 
 const DEF_HEIGHT = "100px";
 
-class FileDrop extends xo.Control {
+class FileDrop extends LitElement {
   _value = [];
 
   _max = -1;
@@ -15,18 +16,36 @@ class FileDrop extends xo.Control {
 
   static get styles() {
     return [
-      xo.Context.sharedStyles,
+      
       css`
         .drop {
           position: relative;
           height: var(--image-height, DEF_HEIGHT);
           min-width: 200px;
+          cursor: pointer
         }
+
+        .drop:not(.has-files) [part="files"]:after {
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: fit-content;
+
+          content: var(
+            --filedrop-info-text,
+            "Select files to upload, or drag & drop them here..."
+          );
+          position: absolute;
+          opacity: 0.3;
+          pointer-events: none;
+        }
+
         input {
           position: absolute;
           width: 100%;
           height: var(--image-height, DEF_HEIGHT);
           opacity: 0;
+          cursor: pointer
         }
         progress {
           width: 100%;
@@ -47,7 +66,7 @@ class FileDrop extends xo.Control {
         .thumb {
           position: relative;
           border: 6px solid white;
-          background-color: rgba(127,127,127,.1);
+          background-color: rgba(127, 127, 127, 0.1);
           display: inline-block;
           height: 100%;
           width: 120px;
@@ -94,6 +113,9 @@ class FileDrop extends xo.Control {
       types: {
         type: Array,
       },
+      infotext: {
+        type: String,
+      },
     };
   }
 
@@ -116,7 +138,7 @@ class FileDrop extends xo.Control {
   set value(value) {
     if (typeof value === "undefined") return;
 
-    if (!Array.isArray(value)) throw Error("Invalid value for filedrop");
+    if (!Array.isArray(value)) return; // throw Error("Invalid value for filedrop");
 
     this._value = value;
   }
@@ -135,18 +157,21 @@ class FileDrop extends xo.Control {
     return this._types;
   }
 
-  renderInput() {
-    const multiple = this.max !== 1 ? "multiple" : "";
+  render() {
+    const setinfo = this.infotext
+      ? `--filedrop-info-text: ${this.infotext}`
+      : "";
+    const style = `--image-height: ${this.height};` + setinfo;
 
     return html`<div
-      style="--image-height: ${this.height}"
-      class="drop"
+      style="${style}"
+      class="drop ${this.value.length ? "has-files" : ""}"
       @dragover=${this.dragOver}
       @dragend=${this.dragEnd}
       @dragleave=${this.dragEnd}
       @drop=${this.drop}
     >
-      <input @change=${this.change} type="file" ${multiple} />
+      <input @change=${this.change} type="file" .multiple=${this.max!==1} />
       <div class="files" part="files">
         ${repeat(
           this.value,
@@ -179,6 +204,16 @@ class FileDrop extends xo.Control {
     e.dataTransfer.dropEffect = "copy";
     this.shadowRoot.querySelector(".drop").classList.add("dropping");
     return false;
+  }
+
+  reportValidity() {}
+
+  checkValidity() {
+    try {
+      this.checkConstraints();
+    } catch (ex) {
+      return false;
+    }
   }
 
   dragEnd(e) {
@@ -246,9 +281,10 @@ class FileDrop extends xo.Control {
     });
   }
 
-  fireChange(){
-    this.classList[this.value.length ? "add":"remove"]("has-files")
-    super.fireChange();
+  fireChange() {
+    this.dispatchEvent(
+      new Event("change", { bubbles: true, cancelable: false })
+    );
   }
 
   checkConstraints(file) {
@@ -286,5 +322,5 @@ class FileDrop extends xo.Control {
   }
 }
 
-customElements.define("xo-filedrop", FileDrop);
+customElements.define("xw-filedrop", FileDrop);
 export default FileDrop;

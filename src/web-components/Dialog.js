@@ -87,5 +87,5 @@ export class Dialog extends LitElement {
     return this.shadowRoot.querySelector("dialog").open;
   }
 }
-customElements.define("xo-dialog", Dialog);
+customElements.define("xw-dialog", Dialog);
 export default Dialog;

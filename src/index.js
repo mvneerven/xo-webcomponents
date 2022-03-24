@@ -1,3 +1,5 @@
 import xo from 'xo-form'
 
-import { WEB_COMPONENTS } from './web-components'
+import XoWebComponents from './web-components'
+
+export default XoWebComponents;

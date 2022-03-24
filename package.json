@@ -1,8 +1,8 @@
 {
   "name": "xo-webcomponents",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "XO Web Component Library",
-  "main": "dist/xo-webcomponents.js",
+  
   "scripts": {
     "dev": "node esbuild-dev.js",
     "build": "node esbuild-build.js"
@@ -18,8 +18,8 @@
     "cross-env": "^7.0.3",
     "esbuild": "^0.13.15"
   },
-  "dependencies": {
+  "peerDependencies": {
     "lit": "^2.2.0",
-    "xo-form": "^1.0.1"
+    "xo-form": "^1.0.4"
   }
 }

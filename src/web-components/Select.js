@@ -1,51 +1,65 @@
-import xo from 'xo-form';
-import { html } from 'lit';
-import { repeat } from 'lit/directives/repeat.js';
+import { LitElement, html, css } from "lit";
+import { repeat } from "lit/directives/repeat.js";
 
-class Select extends xo.Control {
-    _value = [];
+class Select extends LitElement {
+  _value = [];
 
-    static get properties() {
-        return {
-            items: { type: Array },
-            value: { type: Object }
-        };
-    }
+  static get properties() {
+    return {
+      items: { type: Array },
+      value: { type: Object },
+    };
+  }
 
-    constructor() {
-        super();
-        this.items = []
-    }
+  constructor() {
+    super();
+    this.items = [];
+  }
 
-    renderInput() {
-        return html`<select @change=${this.fireChange.bind(this)} size="1">
-             ${repeat(this.items, (item) => item.id, (item, index) => {
-                item = this.makeItem(item)                 
-                return html`<option .selected=${this.isSelected(item)} value="${item.value}">${item.label}</option>`;
-                })}
-        </select>`
-    }
+  render() {
+    return html`<select @change=${this.fireChange.bind(this)} size="1">
+      ${repeat(
+        this.items,
+        (item) => item.id,
+        (item, index) => {
+          item = this.makeItem(item);
+          return html`<option
+            .selected=${this.isSelected(item)}
+            value="${item.value}"
+          >
+            ${item.label}
+          </option>`;
+        }
+      )}
+    </select>`;
+  }
 
-    change(e){
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    
-    isSelected(item){
-        return this._value == item.value;
-    }
+  change(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
 
-    makeItem(item){
-        return typeof(item)==="string" ? {value: item, label: item} : item;
-    }
+  fireChange() {
+    this.dispatchEvent(
+      new Event("change", { bubbles: true, cancelable: false })
+    );
+  }
 
-    get value(){
-        return this._value;
-    }
+  isSelected(item) {
+    return this._value == item.value;
+  }
 
-    set value(value){
-        this._value = value;
-    }
+  makeItem(item) {
+    return typeof item === "string" ? { value: item, label: item } : item;
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  set value(value) {
+    this._value = value;
+  }
 }
 export default Select;
-window.customElements.define('xo-select', Select);
+window.customElements.define("xw-select", Select);

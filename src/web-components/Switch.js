@@ -1,10 +1,8 @@
 import { LitElement, html, css } from "lit";
-import xo from "xo-form";
 
-class Switch extends xo.Control {
+class Switch extends LitElement {
   static get styles() {
     return [
-      xo.Context.sharedStyles,
       css`
         label.switch {
           display: inline-block;
@@ -59,25 +57,28 @@ class Switch extends xo.Control {
         .knob-lbl {
           margin-left: 50px;
           width: auto;
+          cursor: pointer;
         }
       `,
     ];
   }
 
+  static get properties() {
+    return {
+      text: {
+        type: String,
+      },
+    };
+  }
+
   _value = false;
 
-  renderInput() {
+  render() {
     return html`<label class="switch">
       <input @change=${this.toggle} .checked=${this.value} type="checkbox" />
       <div class="knob round"></div>
       <div class="knob-lbl">${this.text}</div>
     </label>`;
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.text = this.label;
-    this.label = "";
   }
 
   checkValidity() {
@@ -94,8 +95,12 @@ class Switch extends xo.Control {
     e.stopPropagation();
     this.value = e.target.checked === true;
 
-    this.fireChange();
+    this.dispatchEvent(
+      new Event("change", { bubbles: true, cancelable: false })
+    );
   }
+
+  reportValidity() {}
 
   get value() {
     return this._value ?? false;
@@ -107,4 +112,4 @@ class Switch extends xo.Control {
 }
 
 export default Switch;
-window.customElements.define("xo-switch", Switch);
+window.customElements.define("xw-switch", Switch);

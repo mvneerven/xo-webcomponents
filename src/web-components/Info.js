@@ -1,7 +1,6 @@
-import xo from "xo-form";
-import { html, css } from "lit";
+import { LitElement, html, css } from "lit";
 
-class Info extends xo.Control {
+class Info extends LitElement {
     static get properties (){
         return {
             title: {
@@ -23,5 +22,5 @@ class Info extends xo.Control {
         `
     }
 }
-customElements.define("xo-info", Info);
+customElements.define("xw-info", Info);
 export default Info

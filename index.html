@@ -15,23 +15,27 @@
 
         }
 
-        xo-filedrop:not(.has-files)::part(files):after {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: fit-content;
-
-
-            content: "Select files to upload, or drag & drop them here...";
-            position: absolute;
-            opacity: .3;
-            pointer-events: none;
-        }
+        
     </style>
 </head>
 
 <body>
     <xo-form theme="material" src="/forms/simple.js"></xo-form>
+
+    <textarea readonly id="model" cols="80" rows="20"></textarea>
+
+    <script type="module">
+        let form = document.querySelector("xo-form");
+        form.addEventListener("modelchange", (e) => {
+          document.getElementById("model").value = JSON.stringify(
+            e.detail.model,
+            (key, value) => {
+              if (key === "dataUrl") return value.split(",")[0];
+    
+              return value;
+            }, 2);
+        });
+      </script>
 </body>
 
 </html>

@@ -1,9 +1,8 @@
 import { LitElement, html, css } from "lit";
 import { repeat } from "lit/directives/repeat.js";
-import xo from "xo-form";
 
 
-class Tags extends xo.Control {
+class Tags extends LitElement {
   _value = [];
 
   constructor() {
@@ -24,19 +23,24 @@ class Tags extends xo.Control {
 
   static get styles() {
     return [
-      xo.Context.sharedStyles,
       css`
+        input {
+          border: 0;
+          outline: 0;
+          background: transparent;
+        }
         .tags {
           display: flex;
+          min-height: 1.85rem;
         }
         .tag {
           white-space: nowrap;
           display: inline-block;
-          margin: 0.4rem;
           border-radius: 0.3rem 1rem 1rem 0.3rem;
           background-color: var(--xo-card-background);
           color: var(--xo-card-color);
           padding: 0.3rem 0.6rem;
+          margin-right: .3rem;
         }
         .eye {
           display: inline-block;
@@ -78,14 +82,13 @@ class Tags extends xo.Control {
 
   set value(value) {
     if (!Array.isArray(value)) {
-      console.warn("Tags value must be array");
       return;
     }
 
     this._value = value;
   }
 
-  renderInput() {
+  render() {
     return html`<div class="tags">
       ${repeat(
         this.value,
@@ -100,12 +103,17 @@ class Tags extends xo.Control {
 
   firstUpdated() {
     super.firstUpdated();
-    this.context.mapper.tryAutoComplete(
-      this,
-      this.textInput,
-      this.autocomplete
-    );
+
+    // this.context.mapper.tryAutoComplete(
+    //   this,
+    //   this.textInput,
+    //   this.autocomplete
+    // );
   }
+
+  reportValidity (){ return true}
+
+  checkValidity() {return true}
 
   input(e) {
     switch (e.key) {
@@ -131,6 +139,12 @@ class Tags extends xo.Control {
     }
   }
 
+  fireChange() {
+    this.dispatchEvent(
+      new Event("change", { bubbles: true, cancelable: false })
+    );
+  }
+
   renderTag(value, index) {
     return html`<div data-index="${index}" class="tag">
       <span class="eye">○</span><span>${value}</span>
@@ -150,5 +164,5 @@ class Tags extends xo.Control {
   }
 }
 
-customElements.define("xo-tags", Tags);
+customElements.define("xw-tags", Tags);
 export default Tags;

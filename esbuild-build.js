@@ -1,16 +1,27 @@
 // https://esbuild.github.io/api/
 const esbuild = require("esbuild");
-const { sassPlugin } = require('@es-pack/esbuild-sass-plugin');
+const fs = require("fs");
 
-esbuild.build({
-  entryPoints: ['src/index.js'],
-  bundle: true,
-  format: "esm",
-  keepNames: true,
-  minify: true,
-  outfile: 'dist/xo-webcomponents.js',
-}).catch(ex => {
-  console.error(ex);
-  process.exit(1)
-})
+console.log("Building");
 
+let d = fs.readdir("./src/web-components/", (err, files) => {
+  let arr = files.map((i) => {
+    return "src/web-components/" + i.toString();
+  });
+
+  console.log(arr);
+
+  esbuild
+    .build({
+      entryPoints: arr,
+      bundle: true,
+      keepNames: true,
+      minify: true,
+      external: ["./node_modules/*"],
+      outdir: "dist/",
+    })
+    .catch((ex) => {
+      console.error(ex);
+      process.exit(1);
+    });
+});

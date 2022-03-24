@@ -1,15 +1,18 @@
-import xo from "xo-form";
-import { html, css } from "lit";
+import { LitElement, html, css } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 
-class RadioGroup extends xo.Control {
+class RadioGroup extends LitElement {
   _value = [];
   _layout = "default";
 
   static get styles() {
     return [
-      xo.Context.sharedStyles,
       css`
+
+        * {
+          box-sizing: border-box; /* 1 */
+        }
+
         .cards {
           width: 100%;
           flex-wrap: wrap;
@@ -78,7 +81,7 @@ class RadioGroup extends xo.Control {
 
         .default label {
           position: relative;
-          padding-left: 16px;
+          padding-left: 24px;
           cursor: pointer;
           margin-right: 1rem;
           display: inline-block;
@@ -147,7 +150,7 @@ class RadioGroup extends xo.Control {
     return this._layout;
   }
 
-  renderInput() {
+  render() {
     let name = this.name;
 
     return html`<div class="${this.layout}">
@@ -184,6 +187,8 @@ class RadioGroup extends xo.Control {
     e.stopPropagation();
   }
 
+  reportValidity() {}
+
   toggleCheck(e) {
     e.stopPropagation();
 
@@ -191,7 +196,10 @@ class RadioGroup extends xo.Control {
       this._value = e.target.value;
     }
 
-    this.fireChange();
+    this.dispatchEvent(
+      new Event("change", { bubbles: true, cancelable: false })
+    );
+    this.requestUpdate();
   }
 
   checkValidity() {
@@ -216,4 +224,4 @@ class RadioGroup extends xo.Control {
   }
 }
 export default RadioGroup;
-window.customElements.define("xo-radiogroup", RadioGroup);
+window.customElements.define("xw-radiogroup", RadioGroup);

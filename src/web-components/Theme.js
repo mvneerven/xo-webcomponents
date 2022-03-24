@@ -1,7 +1,7 @@
-import xo from "xo-form";
-import { css, html } from "lit";
 
-class Theme extends xo.Control {
+import { css, html, LitElement } from "lit";
+
+class Theme extends LitElement {
   static get properties() {
     return {
       dark: {
@@ -11,7 +11,6 @@ class Theme extends xo.Control {
   }
   static get styles() {
     return [
-      xo.Context.sharedStyles,
       css`
         button {
           outline: none;
@@ -51,5 +50,5 @@ class Theme extends xo.Control {
   }
 }
 
-customElements.define("pwa-theme", Theme);
+customElements.define("xw-theme", Theme);
 export default Theme;

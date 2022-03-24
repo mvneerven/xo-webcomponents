@@ -4,6 +4,7 @@ class Checkbox extends CheckGroup {
   static get properties() {
     return {
       value: { type: Boolean },
+      text: { type: String },
     };
   }
 
@@ -12,9 +13,17 @@ class Checkbox extends CheckGroup {
   }
 
   set value(value) {
-    if (typeof value !== "boolean") return;
+    //if (typeof value !== "boolean") return;
 
     this._value = [value];
+  }
+
+  set text(value) {
+    this.items[0].label = value;
+  }
+
+  get text() {
+    return this.items ? this.items[0].label : "On";
   }
 
   toggleCheck(e) {
@@ -22,18 +31,15 @@ class Checkbox extends CheckGroup {
     super.toggleCheck(e);
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-
+  constructor() {
+    super(...arguments);
     this.items = [
       {
-        value: "1",
-        label: this.label ?? "On",
+        value: true,
+        label: "On",
       },
     ];
-    this.label = "";
-    this._value = this._value[0] === true ? ["1"] : [];
   }
 }
 export default Checkbox;
-window.customElements.define("xo-checkbox", Checkbox);
+window.customElements.define("xw-checkbox", Checkbox);

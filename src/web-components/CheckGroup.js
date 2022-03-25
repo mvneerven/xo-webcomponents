@@ -4,7 +4,9 @@ class CheckGroup extends InputGroup {
   _value = [];
 
   static get styles() {
-    return [InputGroup.styles];
+    return [
+      InputGroup.styles
+    ]; 
   }
 
   static get properties() {
@@ -33,7 +35,7 @@ class CheckGroup extends InputGroup {
   }
 
   checkValidity() {
-    //TODO
+    return this.required? this.value.length > 0 : true
   }
 
   reportValidity() {}

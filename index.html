@@ -2,36 +2,50 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XO-WEBCOMPONENTS</title>
-    
-    <script defer type="module" src="/js/index.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>XO-WEBCOMPONENTS</title>
 
-    <link rel="stylesheet" href="/css/main.css" />
+  <script defer type="module" src="/js/index.js"></script>
+
+  <link rel="stylesheet" href="/css/main.css" />
 
 </head>
 
 <body>
-    <xw-theme></xw-theme>
-    
-    <xo-form theme="material" src="/forms/manage-pets.js"></xo-form>
+  <xw-theme></xw-theme>
 
-    <textarea readonly id="model" cols="80" rows="20"></textarea>
+  <xo-form theme="material" src="/forms/onboarding.js"></xo-form>
 
-    <script type="module">
-        let form = document.querySelector("xo-form");
-        form.addEventListener("modelchange", (e) => {
-          document.getElementById("model").value = JSON.stringify(
-            e.detail.model,
-            (key, value) => {
-              if (key === "dataUrl") return value.split(",")[0];
-    
-              return value;
-            }, 2);
-        });
-      </script>
+  <details id="model-state" title="View XO Model State">
+    <summary>
+      ⊟
+    </summary>
+    <div>
+      <textarea readonly id="model" cols="80" rows="20"></textarea>
+    </div>
+
+  </details>
+
+
+  <script type="module">
+    let form = document.querySelector("xo-form");
+    form.addEventListener("modelchange", (e) => {
+      console.log("modelchange", e.detail);
+
+      document.getElementById("model").value = JSON.stringify(
+        e.detail.model,
+        (key, value) => {
+          if (key === "dataUrl") return value.split(",")[0];
+
+          return value;
+        }, 2);
+    });
+
+
+  </script>
 </body>
 
 </html>

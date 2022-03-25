@@ -32,3 +32,9 @@ body {
 
     accent-color: var(--accent);
 }
+
+input,
+textarea {
+    background-color: var(--xo-input-bg);
+    color: var(--text-color);
+}

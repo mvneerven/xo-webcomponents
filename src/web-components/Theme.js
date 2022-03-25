@@ -1,4 +1,3 @@
-
 import { css, html, LitElement } from "lit";
 
 class Theme extends LitElement {
@@ -25,6 +24,20 @@ class Theme extends LitElement {
     ];
   }
 
+  constructor() {
+    super();
+    this.cls = document.documentElement.classList;
+    this.dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
+  get dark() {
+    return this._dark;
+  }
+
+  set dark(value) {
+    this._dark = value;
+  }
+
   render() {
     return html`<button
       @click=${this.click}
@@ -41,11 +54,12 @@ class Theme extends LitElement {
   }
 
   get dark() {
-    return document.documentElement.classList.contains("theme-dark");
+    return this.cls.contains("theme-dark");
   }
 
   set dark(value) {
-    document.documentElement.classList[value ? "add" : "remove"]("theme-dark");
+    this.cls[value ? "add" : "remove"]("theme-dark");
+    this.cls[!value ? "add" : "remove"]("theme-light");
     this.requestUpdate();
   }
 }

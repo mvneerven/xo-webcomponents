@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 
 class InputGroup extends LitElement {
@@ -8,10 +9,6 @@ class InputGroup extends LitElement {
   static get styles() {
     return [
       css`
-        * {
-          box-sizing: border-box; /* 1 */
-        }
-
         .cards {
           width: 100%;
           flex-wrap: wrap;
@@ -21,6 +18,7 @@ class InputGroup extends LitElement {
             minmax(var(--card-width), 1fr)
           );
           grid-auto-rows: minmax(var(--card-height), auto);
+          gap: 0.3rem;
         }
 
         .cards label {
@@ -33,6 +31,7 @@ class InputGroup extends LitElement {
           border-radius: 10px;
           border: 2px solid var(--xo-input-border-color);
           background-image: var(--image);
+          transition: all 0.2s;
         }
 
         .cards label:hover {
@@ -76,8 +75,7 @@ class InputGroup extends LitElement {
           position: relative;
           transition: all 0.2s;
         }
-        .cards label.selected:after,
-        .list label.selected:after {
+        .cards label.selected:after {
           font-size: 1.2rem;
           font-weight: 800;
           content: "✓";
@@ -93,13 +91,15 @@ class InputGroup extends LitElement {
           padding: 1rem 0.5em 1rem 0.5rem;
           border: 2px solid #ccc;
           border-radius: 1rem;
+          margin-bottom: 0.3rem;
+          transition: all 0.2s;
         }
 
         .list label.selected {
         }
 
-        .default [type="radio"],
-        .list [type="radio"] {
+        .default [type],
+        .list [type] {
           position: absolute;
           left: -9999px;
         }
@@ -176,36 +176,53 @@ class InputGroup extends LitElement {
   }
 
   render() {
-    let name = this.name;
-
-    return html`<div
-      class="${this.layout}"
-      style="--card-width: ${this.cardWidth}; --card-height: ${this.cardHeight}"
-    >
+    return html`<div class="${this.layout}" style=${this.getStyle()}>
       ${repeat(
         this.items,
         (item) => item.id,
         (item, index) => {
           item = this.makeItem(item);
-          const checked = this.isSelected(item);
-          return html`<label
-            title="${item.label}"
-            class="${checked ? "selected" : ""} ${item.image
-              ? "has-image"
-              : ""}"
-            style="--image: url(${item.image});"
-            ><input
-              @change=${this.change}
-              @click=${this.toggleCheck}
-              .checked=${checked}
-              type=${this.inputType}
-              name="${name}"
-              value="${item.value}"
-            /><span class="xo-sl"> ${item.label}</span></label
-          >`;
+          item.checked = this.isSelected(item);
+          item.style = this.getItemStyle(item);
+          item.class = this.getItemClass(item);
+          return this.renderItem(item);
         }
       )}
     </div>`;
+  }
+
+  renderItem(item) {
+    return html`<label
+      title=${item.label}
+      class=${ifDefined(item.class ? item.class : undefined)}
+      style=${ifDefined(item.style ? item.style : undefined)}
+      ><input
+        @change=${this.change}
+        @click=${this.toggleCheck}
+        .checked=${item.checked}
+        type=${this.inputType}
+        name="${this.name}"
+        value="${item.value}"
+      /><span class="xo-sl"> ${item.label}</span></label
+    >`;
+  }
+
+  getItemClass(item) {
+    return `${item.checked ? "selected" : ""} ${
+      item.image ? "has-image" : ""
+    }`.trim();
+  }
+
+  getItemStyle(item) {
+    let s = item.image ? `--image: url(${item.image})` : undefined;
+    return s;
+  }
+
+  getStyle() {
+    switch (this.layout) {
+      case "cards":
+        return `--card-width: ${this.cardWidth}; --card-height: ${this.cardHeight}`;
+    }
   }
 
   get inputType() {

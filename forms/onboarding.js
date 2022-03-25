@@ -27,7 +27,9 @@ const breedAutoComplete = (options) => {
 export const onboarding = {
   model: {
     instance: {
-      state: {},
+      state: {
+        noPetName: true,
+      },
       insurance: {
         name: "",
         type: "",
@@ -35,6 +37,14 @@ export const onboarding = {
       },
     },
     rules: {
+      "#/insurance/name": [
+        {
+          set: "#/state/noPetName",
+          value: (context) => {
+            return context.value === "";
+          },
+        },
+      ],
       "#/state/send": [
         {
           value: (context) => {
@@ -79,10 +89,11 @@ export const onboarding = {
         {
           type: "xw-radiogroup",
           layout: "cards",
-          label: "What type of pet is #/insurance/name ?",
-          required: true,
           cardWidth: "110px",
           cardHeight: "110px",
+          hidden: "#/state/noPetName",
+          label: "What type of pet is #/insurance/name ?",
+          required: true,
           bind: "#/insurance/type",
           items: [
             { label: "Cat", value: "cat", image: "/img/pets/cat.webp" },
@@ -101,7 +112,7 @@ export const onboarding = {
         },
         {
           type: "xw-checkgroup",
-          layout: "cards",
+          laayout: "list",
           label: "What type of pet is #/insurance/name ?",
           required: true,
           cardWidth: "140px",
@@ -164,7 +175,7 @@ export const onboarding = {
         {
           type: "xw-radiogroup",
           layout: "list",
-          style: "--card-width: 100%; --card-height: 110px",
+
           bind: "#/insurance/plan",
           items: [
             { label: "Standard", value: "std" },

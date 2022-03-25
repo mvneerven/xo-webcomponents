@@ -74,7 +74,11 @@ export const form = {
         {
           type: "xw-tags",
           label: "Tags",
-          bind: "#/data/tags"
+          bind: "#/data/tags",
+          autocomplete: {
+
+            items: ["App"]
+          }
         }
       ],
     },

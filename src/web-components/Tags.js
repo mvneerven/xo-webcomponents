@@ -1,6 +1,9 @@
 import { LitElement, html, css } from "lit";
 import { repeat } from "lit/directives/repeat.js";
+import xo from "xo-form";
 
+const DEF_MAX_WIDTH = "100%";
+const AutoComplete = xo.AutoComplete;
 
 class Tags extends LitElement {
   _value = [];
@@ -9,8 +12,27 @@ class Tags extends LitElement {
     super(...arguments);
     this.textInput = document.createElement("input");
     this.textInput.type = "text";
-
     this.textInput.addEventListener("keydown", this.input.bind(this));
+    this.listenToAutoCompleteEvents();
+  }
+
+  listenToAutoCompleteEvents() {
+    this.textInput.addEventListener("result-selected", (e) => {
+      this.textInput.value = e.detail.text;
+      this.tryAdd();
+    });
+
+    this.textInput.addEventListener("show-results", (e) => {
+      const r = e.detail.results;
+      this.value.forEach((tag) => {
+        let index = r.findIndex((i) => {
+          return i.text === tag;
+        });
+        if (index !== -1) {
+          r.splice(index, 1);
+        }
+      });
+    });
   }
 
   set placeholder(value) {
@@ -21,16 +43,38 @@ class Tags extends LitElement {
     return this.textInput.placeholder;
   }
 
+  firstUpdated() {
+    super.firstUpdated();
+    if (this.autocomplete && this.autocomplete.items) {
+      this._autoCompleter = new AutoComplete(
+        this,
+        this.textInput,
+        this.autocomplete
+      );
+      this._autoCompleter.attach();
+    }
+  }
+
   static get styles() {
     return [
+      AutoComplete.sharedStyles,
       css`
+        .xo-ac-rs {
+          top: 2rem;
+        }
+
         input {
           border: 0;
           outline: 0;
           background: transparent;
         }
         .tags {
+          position: relative;
           display: flex;
+          width: 100%;
+          flex-wrap: wrap;
+          gap: 0.3rem;
+          max-width: var(--max-tags-width, 400px);
           min-height: 1.85rem;
         }
         .tag {
@@ -40,7 +84,7 @@ class Tags extends LitElement {
           background-color: var(--xo-card-background);
           color: var(--xo-card-color);
           padding: 0.3rem 0.6rem;
-          margin-right: .3rem;
+          margin-right: 0.3rem;
         }
         .eye {
           display: inline-block;
@@ -68,6 +112,12 @@ class Tags extends LitElement {
       value: {
         type: Array,
       },
+      maxWidth: {
+        type: String,
+      },
+      autocomplete: {
+        type: Object,
+      },
     };
   }
 
@@ -89,7 +139,10 @@ class Tags extends LitElement {
   }
 
   render() {
-    return html`<div class="tags">
+    return html`<div
+      class="tags"
+      style="--max-tags-width: ${this.maxWidth ?? DEF_MAX_WIDTH}"
+    >
       ${repeat(
         this.value,
         (item) => item.id,
@@ -101,30 +154,19 @@ class Tags extends LitElement {
     </div>`;
   }
 
-  firstUpdated() {
-    super.firstUpdated();
-
-    // this.context.mapper.tryAutoComplete(
-    //   this,
-    //   this.textInput,
-    //   this.autocomplete
-    // );
+  reportValidity() {
+    return true;
   }
 
-  reportValidity (){ return true}
-
-  checkValidity() {return true}
+  checkValidity() {
+    return true;
+  }
 
   input(e) {
     switch (e.key) {
       case "Enter":
         if (e.target.value !== "") {
-          if (this.value.indexOf(e.target.value) === -1) {
-            this.value.push(e.target.value);
-            this.fireChange();
-            this.requestUpdate();
-            e.target.value = "";
-          }
+          this.tryAdd(e.target.value);
         }
 
         break;
@@ -136,6 +178,15 @@ class Tags extends LitElement {
         }
 
         break;
+    }
+  }
+
+  tryAdd() {
+    if (this.value.indexOf(this.textInput.value) === -1) {
+      this.value.push(this.textInput.value);
+      this.fireChange();
+      this.requestUpdate();
+      this.textInput.value = "";
     }
   }
 

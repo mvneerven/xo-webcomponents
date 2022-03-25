@@ -1,13 +1,11 @@
 {
   "name": "xo-webcomponents",
-  "version": "1.0.7",
+  "version": "1.0.11",
   "description": "XO Web Component Library",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "node esbuild-dev.js",
-    "build": "node esbuild-build.js",
-    "site:build": "npm run storybook:build",
-    "storybook:build": "build-storybook -o _site",
-    "storybook:start": "start-storybook -p 9001"
+    "build": "node esbuild-build.js"
   },
   "author": {
     "name": "Marc van Neerven",
@@ -22,6 +20,6 @@
   },
   "peerDependencies": {
     "lit": "^2.2.0",
-    "xo-form": "^1.0.5"
+    "xo-form": "^1.0.6"
   }
 }

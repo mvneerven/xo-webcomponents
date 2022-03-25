@@ -32,21 +32,21 @@ let d = fs.readdir("./src/web-components/", (err, files) => {
 });
 
 
-esbuild
-    .build({
-      entryPoints: ["src/test/index.js"],
-      bundle: true,
-      keepNames: true,
-      watch: {
-        onRebuild(error, result) {
-          if (error) console.error("watch build failed:", error);
-          else console.log("Build succeeded");
-        },
-      },
-      external: ["./node_modules/*"],
-      outfile: "js/index.js",
-    })
-    .catch((ex) => {
-      console.error(ex);
-      process.exit(1);
-    });
+// esbuild
+//     .build({
+//       entryPoints: ["src/test/index.js"],
+//       bundle: true,
+//       keepNames: true,
+//       watch: {
+//         onRebuild(error, result) {
+//           if (error) console.error("watch build failed:", error);
+//           else console.log("Build succeeded");
+//         },
+//       },
+//       external: ["./node_modules/*"],
+//       outfile: "js/index.js",
+//     })
+//     .catch((ex) => {
+//       console.error(ex);
+//       process.exit(1);
+//     });

@@ -1,6 +1,6 @@
-import { LitElement } from "lit";
-import { html, css } from "lit";
+import { LitElement, html, css } from "lit";
 import { repeat } from "lit/directives/repeat.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 const DEF_HEIGHT = "100px";
 
@@ -15,13 +15,12 @@ class FileDrop extends LitElement {
 
   static get styles() {
     return [
-      
       css`
         .drop {
           position: relative;
           height: var(--image-height, DEF_HEIGHT);
           min-width: 200px;
-          cursor: pointer
+          cursor: pointer;
         }
 
         .drop:not(.has-files) [part="files"]:after {
@@ -44,7 +43,7 @@ class FileDrop extends LitElement {
           width: 100%;
           height: var(--image-height, DEF_HEIGHT);
           opacity: 0;
-          cursor: pointer
+          cursor: pointer;
         }
         progress {
           width: 100%;
@@ -67,7 +66,6 @@ class FileDrop extends LitElement {
           border: 6px solid white;
           background-color: rgba(127, 127, 127, 0.1);
           display: inline-block;
-          height: 100%;
           width: 120px;
           background-size: contain;
           background-repeat: no-repeat;
@@ -170,25 +168,28 @@ class FileDrop extends LitElement {
       @dragleave=${this.dragEnd}
       @drop=${this.drop}
     >
-      <input @change=${this.change} type="file" .multiple=${this.max!==1} />
+      <input @change=${this.change} type="file" .multiple=${this.max !== 1} />
       <div class="files" part="files">
         ${repeat(
           this.value,
           (item) => item.id,
           (item, index) => {
-            return html`<div
-              class="thumb"
-              style="background-image: url(${item.dataUrl})"
-            >
-              <a data-index="${index}" @click=${this.removeThumb.bind(this)}
-                >⨉</a
-              >
-            </div>`;
+            return this.renderFile(item, index);
           }
         )}
       </div>
 
       <progress id="progress" value="0" max="100"></progress>
+    </div>`;
+  }
+
+  renderFile(item, index) {
+    let url = item.dataUrl ?? item.url;
+    return html`<div
+      class="thumb"
+      style=${ifDefined(url ? `background-image: url(${url});` : undefined)}
+    >
+      <a data-index="${index}" @click=${this.removeThumb.bind(this)}>⨉</a>
     </div>`;
   }
 

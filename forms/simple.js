@@ -5,7 +5,12 @@ export const form = {
       data: {
         name: "",
         msg: "",
-        radio: "Bad"
+        radio: "Bad",
+        files: [
+          {
+            url: "https://images.pexels.com/photos/5365910/pexels-photo-5365910.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          }
+        ]
       },
     },
     rules: {
@@ -63,6 +68,7 @@ export const form = {
           label: "Files",
           infotext: "Drop 'm like they're hot!",
           height: "200px",
+          bind: "#/data/files",
           max: 10
         },
         {

@@ -1,6 +1,8 @@
 import CheckGroup from "./CheckGroup";
 
 class Checkbox extends CheckGroup {
+  _value = false;
+
   static get properties() {
     return {
       value: { type: Boolean },
@@ -9,13 +11,11 @@ class Checkbox extends CheckGroup {
   }
 
   get value() {
-    return this._value[0] === this.items[0].value;
+    return this._value;
   }
 
   set value(value) {
-    //if (typeof value !== "boolean") return;
-
-    this._value = [value];
+    this._value = value;
   }
 
   set text(value) {
@@ -27,8 +27,17 @@ class Checkbox extends CheckGroup {
   }
 
   toggleCheck(e) {
-    this._value = [];
-    super.toggleCheck(e);
+    e.stopPropagation();
+    if (e.target.checked) {
+      this._value = true;
+    } else {
+      this._value = false;
+    }
+    this.requestUpdate();
+  }
+
+  isSelected(){
+    return this.value;
   }
 
   constructor() {

@@ -7,7 +7,10 @@ import RadioGroup from "./RadioGroup";
 import Select from "./Select";
 import Switch from "./Switch";
 import Tags from "./Tags";
+import Monaco from "./Monaco";
+import OmniBox from "./OmniBox";
 import Theme from "./Theme";
+
 
 module.exports = {
   Checkbox,
@@ -15,6 +18,8 @@ module.exports = {
   Dialog,
   FileDrop,
   Info,
+  Monaco,
+  OmniBox,
   RadioGroup,
   Select,
   Switch,

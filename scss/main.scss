@@ -10,6 +10,7 @@
     --xo-input-border-color-active: rgba(180, 180, 180);
     --xo-card-background: rgb(100, 100, 100);
     --xo-card-color: white;
+    --filedrop-thumb-bgcolor: rgba(230,230,230, 1);
 
     &.theme-dark {
         --accent: var(--color-accent, #5287eb);
@@ -21,6 +22,7 @@
         --xo-input-border-color-hover: rgba(80, 80, 80);
         --xo-input-border-color-active: rgba(110, 110, 110);
         --xo-card-background: rgb(60, 60, 60);
+        --filedrop-thumb-bgcolor: rgb(80, 80, 80);
     }
 }
 

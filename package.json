@@ -1,6 +1,6 @@
 {
   "name": "xo-webcomponents",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "XO Web Component Library",
   "main": "dist/index.js",
   "scripts": {
@@ -20,6 +20,6 @@
   },
   "peerDependencies": {
     "lit": "^2.2.0",
-    "xo-form": "^1.0.10"
+    "xo-form": "^1.0.17"
   }
 }

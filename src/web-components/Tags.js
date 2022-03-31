@@ -1,9 +1,9 @@
 import { LitElement, html, css } from "lit";
 import { repeat } from "lit/directives/repeat.js";
-import xo from "xo-form";
+import ac from "xo-form/dist/xo-autocomplete.js";
 
 const DEF_MAX_WIDTH = "100%";
-const AutoComplete = xo.AutoComplete;
+const AutoComplete = ac.AutoComplete;
 
 class Tags extends LitElement {
   _value = [];
@@ -46,18 +46,20 @@ class Tags extends LitElement {
   firstUpdated() {
     super.firstUpdated();
     if (this.autocomplete && this.autocomplete.items) {
+      if(typeof(AutoComplete) !== "undefined"){
       this._autoCompleter = new AutoComplete(
         this,
         this.textInput,
         this.autocomplete
       );
       this._autoCompleter.attach();
+      }
     }
   }
 
   static get styles() {
     return [
-      AutoComplete.sharedStyles,
+      (typeof(AutoComplete) !== "undefined") ? AutoComplete.sharedStyles : css``,
       css`
         .xo-ac-rs {
           top: 2rem;

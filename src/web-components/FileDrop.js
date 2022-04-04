@@ -353,7 +353,7 @@ class FileDrop extends LitElement {
     this.value.forEach((f) => {
       totalSize += f.size;
     });
-    if (totalSize > this.limit) {
+    if (totalSize + file.size > this.limit) {
       throw Error("File size limit exceeded");
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "xo-webcomponents",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "XO Web Component Library",
   "main": "dist/index.js",
   "scripts": {
